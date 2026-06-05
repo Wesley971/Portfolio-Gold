@@ -1,0 +1,6 @@
+# Exemple minimal pour un projet NestJS + React
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
