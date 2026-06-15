@@ -1,4 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef } from 'react'
+
+const ParticleCanvas = lazy(() => import('./ParticleCanvas'))
 
 export default function Hero() {
   const heroLeftRef = useRef<HTMLDivElement>(null)
@@ -39,31 +41,36 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="hero">
-      <div className="wrap hero-body">
-        <div className="hero-left" ref={heroLeftRef}>
-          <p className="hero-tags">Full-Stack &middot; React &middot; NestJS &middot; Docker</p>
-          <div>
-            <span className="hero-fn">Wesley</span>
-            <span className="hero-ln">Abdoul</span>
+    <section id="hero" style={{ position: 'relative' }}>
+      <Suspense fallback={null}>
+        <ParticleCanvas />
+      </Suspense>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="wrap hero-body">
+          <div className="hero-left" ref={heroLeftRef}>
+            <p className="hero-tags">Full-Stack &middot; React &middot; NestJS &middot; Docker</p>
+            <div>
+              <span className="hero-fn">Wesley</span>
+              <span className="hero-ln">Abdoul</span>
+            </div>
+            <div className="hero-bar" />
+            <p className="hero-sub">Développeur Full-Stack</p>
           </div>
-          <div className="hero-bar" />
-          <p className="hero-sub">Développeur Full-Stack</p>
-        </div>
-        <div className="avail" ref={availRef}>
-          <div className="avail-ttl">Disponible</div>
-          <div className="avail-sep" />
-          <div className="avail-stack">
-            React &middot; TypeScript<br />
-            NestJS &middot; Prisma<br />
-            Docker &middot; Node.js
+          <div className="avail" ref={availRef}>
+            <div className="avail-ttl">Disponible</div>
+            <div className="avail-sep" />
+            <div className="avail-stack">
+              React &middot; TypeScript<br />
+              NestJS &middot; Prisma<br />
+              Docker &middot; Node.js
+            </div>
+            <a href="#contact" className="avail-cta">→ Discutons</a>
           </div>
-          <a href="#contact" className="avail-cta">→ Discutons</a>
         </div>
-      </div>
-      <div className="scrl" ref={scrlRef}>
-        <div className="scrl-line" />
-        <span className="scrl-txt">Scroll</span>
+        <div className="scrl" ref={scrlRef}>
+          <div className="scrl-line" />
+          <span className="scrl-txt">Scroll</span>
+        </div>
       </div>
     </section>
   )
