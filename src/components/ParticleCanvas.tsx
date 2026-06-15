@@ -11,7 +11,6 @@ interface Particle {
 const PARTICLE_COUNT = 80
 const LINK_DISTANCE = 120
 const MOUSE_RADIUS = 150
-const FRICTION = 0.98
 const GOLD = '201, 168, 76'
 
 function createParticle(w: number, h: number): Particle {
@@ -38,13 +37,20 @@ export default function ParticleCanvas() {
     const isCoarse = window.matchMedia('(pointer: coarse)').matches
     let mouse = { x: -9999, y: -9999 }
 
+    const initSize = () => {
+      const w = canvas.offsetWidth || canvas.parentElement?.offsetWidth || window.innerWidth
+      const h = canvas.offsetHeight || canvas.parentElement?.offsetHeight || window.innerHeight
+      canvas.width = w
+      canvas.height = h
+    }
+    initSize()
+
     const resize = () => {
       const parent = canvas.parentElement
       if (!parent) return
       canvas.width = parent.offsetWidth
       canvas.height = parent.offsetHeight
     }
-    resize()
 
     let particles: Particle[] = Array.from({ length: PARTICLE_COUNT }, () =>
       createParticle(canvas.width, canvas.height)
@@ -70,9 +76,11 @@ export default function ParticleCanvas() {
     }
     window.addEventListener('resize', onResize)
 
-    let rafId: number
+    let animationId: number
+    let mounted = true
 
     const tick = () => {
+      if (!mounted) return
       const w = canvas.width
       const h = canvas.height
 
@@ -90,10 +98,6 @@ export default function ParticleCanvas() {
             p.vy += (dy / dist) * force * 0.06
           }
         }
-
-        // Friction
-        p.vx *= FRICTION
-        p.vy *= FRICTION
 
         // Move
         p.x += p.vx
@@ -132,13 +136,14 @@ export default function ParticleCanvas() {
         }
       }
 
-      rafId = requestAnimationFrame(tick)
+      animationId = requestAnimationFrame(tick)
     }
 
-    rafId = requestAnimationFrame(tick)
+    tick()
 
     return () => {
-      cancelAnimationFrame(rafId)
+      mounted = false
+      cancelAnimationFrame(animationId)
       window.removeEventListener('resize', onResize)
       if (!isCoarse) {
         canvas.removeEventListener('mousemove', onMouseMove)

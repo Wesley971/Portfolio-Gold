@@ -1,6 +1,5 @@
-import { lazy, Suspense, useEffect, useRef } from 'react'
-
-const ParticleCanvas = lazy(() => import('./ParticleCanvas'))
+import { useEffect, useRef } from 'react'
+import ParticleCanvas from './ParticleCanvas'
 
 export default function Hero() {
   const heroLeftRef = useRef<HTMLDivElement>(null)
@@ -41,11 +40,9 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="hero" style={{ position: 'relative' }}>
-      <Suspense fallback={null}>
-        <ParticleCanvas />
-      </Suspense>
-      <div style={{ position: 'relative', zIndex: 1 }}>
+    <section id="hero" style={{ position: 'relative', overflow: 'hidden' }}>
+      <ParticleCanvas />
+      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>
         <div className="wrap hero-body">
           <div className="hero-left" ref={heroLeftRef}>
             <p className="hero-tags">Full-Stack &middot; React &middot; NestJS &middot; Docker</p>
